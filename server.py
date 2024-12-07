@@ -397,28 +397,25 @@ def perform_analysis(n_clicks,
         html.Img(src=enrichment_image, style={'width': '100%', 'height': 'auto'}),
     ])
 
-
-# Define the Flask server explicitly
-server = Flask(__name__)
-app = Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
-
 def keep_alive():
-    url = f"http://localhost:{os.environ.get('PORT', 8050)}"
+    """Ping the app periodically to prevent it from spinning down."""
+    port = os.environ.get('PORT', 8050)
+    url = f"http://localhost:{port}"
     while True:
         try:
             response = requests.get(url)
             if response.status_code == 200:
                 print("Keep-alive request successful.")
             else:
-                print("Keep-alive request failed.")
+                print(f"Keep-alive request failed with status {response.status_code}.")
         except Exception as e:
             print(f"Keep-alive request error: {e}")
-        time.sleep(300)  # Wait 5 minutes between requests
+        time.sleep(300)  # Ping every 5 minutes
 
 if __name__ == '__main__':
     # Start the keep-alive thread
     threading.Thread(target=keep_alive, daemon=True).start()
-    
+
     # Run the Dash app
     port = int(os.environ.get('PORT', 8050))  # Default to 8050 if $PORT is not set
     app.run_server(debug=False, host='0.0.0.0', port=port)
