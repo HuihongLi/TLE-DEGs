@@ -1,7 +1,7 @@
 # TLE-DEGs
 Pilocarpine-induced temporal lobe epilepsy (TLE) differential expression genes (DEGs) analysis
 
-website:https://tle-degs.onrender.com/
+Website:https://tle-degs.onrender.com/
 
 ![image](https://github.com/user-attachments/assets/3087ca26-038e-4a6a-a4ec-0ed1d5848479)
 
