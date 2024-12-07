@@ -6,5 +6,4 @@ website:https://tle-degs.onrender.com/
 References:
 
 1. Srivastava, P.K., Bagnati, M., Delahaye-Duriez, A., Ko, J.H., Rotival, M., Langley, S.R., Shkura, K., Mazzuferi, M., Danis, B., van Eyll, J. and Foerch, P., 2017. Genome-wide analysis of differential RNA editing in epilepsy. Genome research, 27(3), pp.440-450.
-2. 
-3. Li, H., Li, J., Chen, M., Liu, X., Sun, Y., Wu, J., Lin, B., Chen, S., Deng, Z., Hong, M. and Wei, N.L., 2024. Shared Transcriptomic Signatures Reveal Synaptic Pruning as a Link Between Alzheimer's Disease and Epilepsy. bioRxiv, pp.2024-10.
+2. Li, H., Li, J., Chen, M., Liu, X., Sun, Y., Wu, J., Lin, B., Chen, S., Deng, Z., Hong, M. and Wei, N.L., 2024. Shared Transcriptomic Signatures Reveal Synaptic Pruning as a Link Between Alzheimer's Disease and Epilepsy. bioRxiv, pp.2024-10.
