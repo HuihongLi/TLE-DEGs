@@ -415,7 +415,5 @@ def keep_alive():
 if __name__ == '__main__':
     # Start the keep-alive thread
     threading.Thread(target=keep_alive, daemon=True).start()
-
-    # Run the Dash app
-    port = int(os.environ.get('PORT', 8050))  # Default to 8050 if $PORT is not set
+    port = int(os.environ.get("PORT", 10000))  # Render sets PORT to 10000 by default
     app.run_server(debug=False, host='0.0.0.0', port=port)
