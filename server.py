@@ -7,6 +7,7 @@ import requests
 import json
 import base64
 from urllib.parse import urlencode
+import os
 
 # Load data
 df1 = pd.read_csv("data/DEseq2.csv")
