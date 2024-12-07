@@ -34,11 +34,11 @@ app.layout = dbc.Container([
                 dbc.Row([
                     dbc.Col([
                         dbc.Label("Minimum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_min_threshold_deseq2', type='number', value=1, step=0.1),
+                        dbc.Input(id='fc_min_threshold_deseq2', type='number', value=1, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Maximum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_max_threshold_deseq2', type='number', value=10, step=0.1),
+                        dbc.Input(id='fc_max_threshold_deseq2', type='number', value=5, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Adjusted P-value Threshold (padj):"),
@@ -52,11 +52,11 @@ app.layout = dbc.Container([
                 dbc.Row([
                     dbc.Col([
                         dbc.Label("Minimum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_min_threshold_edger', type='number', value=1, step=0.1),
+                        dbc.Input(id='fc_min_threshold_edger', type='number', value=1, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Maximum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_max_threshold_edger', type='number', value=10, step=0.1),
+                        dbc.Input(id='fc_max_threshold_edger', type='number', value=5, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Adjusted P-value Threshold (padj):"),
@@ -70,11 +70,11 @@ app.layout = dbc.Container([
                 dbc.Row([
                     dbc.Col([
                         dbc.Label("Minimum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_min_threshold_limma', type='number', value=1, step=0.1),
+                        dbc.Input(id='fc_min_threshold_limma', type='number', value=1, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Maximum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_max_threshold_limma', type='number', value=10, step=0.1),
+                        dbc.Input(id='fc_max_threshold_limma', type='number', value=5, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Adjusted P-value Threshold (padj):"),
@@ -88,11 +88,11 @@ app.layout = dbc.Container([
                 dbc.Row([
                     dbc.Col([
                         dbc.Label("Minimum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_min_threshold_wilcoxon', type='number', value=1, step=0.1),
+                        dbc.Input(id='fc_min_threshold_wilcoxon', type='number', value=1, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Maximum Absolute Fold Change (|log2FC|):"),
-                        dbc.Input(id='fc_max_threshold_wilcoxon', type='number', value=10, step=0.1),
+                        dbc.Input(id='fc_max_threshold_wilcoxon', type='number', value=5, step=0.5),
                     ], width=12),
                     dbc.Col([
                         dbc.Label("Adjusted P-value Threshold (padj):"),
