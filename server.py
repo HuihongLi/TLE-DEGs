@@ -2,6 +2,7 @@ import threading
 import time
 import requests
 import os
+import base64  # Add this import
 from flask import Flask
 import pandas as pd
 import numpy as np
