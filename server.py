@@ -9,10 +9,10 @@ import base64
 from urllib.parse import urlencode
 
 # Load data
-df1 = pd.read_csv("Final_Project/data/DEseq2.csv")
-df2 = pd.read_csv("Final_Project/data/edgeR.csv")
-df3 = pd.read_csv("Final_Project/data/limma.csv")
-df4 = pd.read_csv("Final_Project/data/Wilcoxon.csv")
+df1 = pd.read_csv("data/DEseq2.csv")
+df2 = pd.read_csv("data/edgeR.csv")
+df3 = pd.read_csv("data/limma.csv")
+df4 = pd.read_csv("data/Wilcoxon.csv")
 
 df1['cluster'] = 'DESeq2'
 df2['cluster'] = 'edgeR'
