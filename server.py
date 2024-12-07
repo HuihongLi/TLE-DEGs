@@ -400,7 +400,7 @@ def perform_analysis(n_clicks,
 
 def keep_alive():
     """Ping the app periodically to prevent it from spinning down."""
-    port = os.environ.get('PORT', 8050)
+    port = os.environ.get('PORT', 10000)
     url = f"http://localhost:{port}"
     while True:
         try:
