@@ -2,7 +2,7 @@ import threading
 import time
 import requests
 import os
-import base64  # Add this import
+import base64  
 from flask import Flask
 import pandas as pd
 import numpy as np
@@ -10,7 +10,6 @@ import plotly.express as px
 from dash import Dash, dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 
-# Load data
 df1 = pd.read_csv("data/DEseq2.csv")
 df2 = pd.read_csv("data/edgeR.csv")
 df3 = pd.read_csv("data/limma.csv")
@@ -21,14 +20,12 @@ df2['cluster'] = 'edgeR'
 df3['cluster'] = 'limma'
 df4['cluster'] = 'Wilcoxon'
 
-# Initialize the Dash app with a Bootstrap theme
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.H2("Threshold Selection", className="text-center mb-4"),
-            # DESeq2 Threshold selection inputs
             dbc.Card([
                 html.H4("DESeq2", className="card-title"),
                 dbc.Row([
@@ -46,7 +43,6 @@ app.layout = dbc.Container([
                     ], width=12),
                 ]),
             ], body=True, className='mb-3'),
-            # edgeR Threshold selection inputs
             dbc.Card([
                 html.H4("edgeR", className="card-title"),
                 dbc.Row([
@@ -64,7 +60,6 @@ app.layout = dbc.Container([
                     ], width=12),
                 ]),
             ], body=True, className='mb-3'),
-            # limma Threshold selection inputs
             dbc.Card([
                 html.H4("limma", className="card-title"),
                 dbc.Row([
@@ -82,7 +77,6 @@ app.layout = dbc.Container([
                     ], width=12),
                 ]),
             ], body=True, className='mb-3'),
-            # Wilcoxon Threshold selection inputs
             dbc.Card([
                 html.H4("Wilcoxon", className="card-title"),
                 dbc.Row([
@@ -100,7 +94,6 @@ app.layout = dbc.Container([
                     ], width=12),
                 ]),
             ], body=True),
-            # Download button and download component
             dbc.Button(
                 'Get List',
                 id='download_button',
@@ -110,7 +103,6 @@ app.layout = dbc.Container([
                 style={'width': '100%'}
             ),
             dcc.Download(id='download-intersection'),
-            # Analysis button
             dbc.Button(
                 'Analysis',
                 id='analysis_button',
@@ -122,7 +114,6 @@ app.layout = dbc.Container([
         ], width=2),
         dbc.Col([
             dcc.Graph(id='scatter_plot', style={'height': '85vh'}),
-            # Enrichment figure and network
             html.Div(id='analysis_output', className='mt-4'),
         ], width=10)
     ], className="mt-4")
@@ -147,7 +138,6 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
                 fc_min_edger, fc_max_edger, padj_edger,
                 fc_min_limma, fc_max_limma, padj_limma,
                 fc_min_wilcoxon, fc_max_wilcoxon, padj_wilcoxon):
-    # Process DESeq2 data
     df1_copy = df1.copy()
     abs_log2fc = df1_copy['log2FoldChange'].abs()
     df1_copy['Label'] = np.where(
@@ -155,7 +145,6 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         np.where(df1_copy['log2FoldChange'] > 0, 'Up', 'Down'),
         'Non'
     )
-    # Process edgeR data
     df2_copy = df2.copy()
     abs_log2fc = df2_copy['log2FoldChange'].abs()
     df2_copy['Label'] = np.where(
@@ -163,7 +152,6 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         np.where(df2_copy['log2FoldChange'] > 0, 'Up', 'Down'),
         'Non'
     )
-    # Process limma data
     df3_copy = df3.copy()
     abs_log2fc = df3_copy['log2FoldChange'].abs()
     df3_copy['Label'] = np.where(
@@ -171,7 +159,6 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         np.where(df3_copy['log2FoldChange'] > 0, 'Up', 'Down'),
         'Non'
     )
-    # Process Wilcoxon data
     df4_copy = df4.copy()
     abs_log2fc = df4_copy['log2FoldChange'].abs()
     df4_copy['Label'] = np.where(
@@ -180,27 +167,17 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         'Non'
     )
 
-    # Concatenate dataframes
     df = pd.concat([df1_copy, df2_copy, df3_copy, df4_copy], axis=0)
-
-    # Create a column for -log10(padj), replace zeros with NaN to avoid infinities
     df['neg_log10_padj'] = -np.log10(df['padj'].replace(0, np.nan))
-
-    # Scale the size for visualization (normalize to range 1 to 500)
     min_size = 5
     max_size = 100
     df['-log10(padj)'] = (df['neg_log10_padj'] - df['neg_log10_padj'].min()) / (
         df['neg_log10_padj'].max() - df['neg_log10_padj'].min()
     ) * (max_size - min_size) + min_size
-
-    # Filter out rows with NaN or infinite values in neg_log10_padj
     df = df.dropna(subset=['neg_log10_padj'])
-
-    # Add jitter to x positions
     cluster_order = ['DESeq2', 'edgeR', 'limma', 'Wilcoxon']
     df['x_jitter'] = df['cluster'].map({c: i for i, c in enumerate(cluster_order)}) + np.random.uniform(-0.2, 0.2, len(df))
 
-    # Plotly scatter plot
     fig = px.scatter(
         df,
         x='x_jitter',
@@ -208,28 +185,25 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         color='Label',
         size='-log10(padj)',
         hover_data={
-            'Gene': df['gene'],       # Replace 'gene' with your actual gene column name
+            'Gene': df['gene'],       
             'log2FoldChange': True,
             'padj': True,
-            '-log10(padj)': True,   # Don't show scaled size
-            'x_jitter': False,       # Don't show jittered x position
+            '-log10(padj)': True,  
+            'x_jitter': False,       
             "Label": False
         },
         color_discrete_map={'Up': 'red', 'Down': 'blue', 'Non': 'grey'},
         title="Epilepsy Model Biomarker Identification",
         labels={"log2FoldChange": "log2FoldChange", '-log10(padj)': 'PointSize -log10(padj)'},
     )
-
-    # Customize layout
     fig.update_traces(marker=dict(opacity=0.7))
-    # Add shapes to mimic gridlines for specific clusters
     fig.update_layout(
         xaxis=dict(
             tickmode='array',
             tickvals=list(range(len(cluster_order))),
             ticktext=cluster_order,
             title='Method',
-            showgrid=False  # Disable global gridlines
+            showgrid=False  
         ),
         yaxis=dict(
             title='log2FoldChange',
@@ -238,7 +212,6 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
             zerolinecolor='black',
         ),
         shapes=[
-            # Add vertical lines for methods
             dict(
                 type='line',
                 x0=i,
@@ -282,18 +255,15 @@ def download_intersection(n_clicks,
                                           fc_min_wilcoxon, fc_max_wilcoxon, padj_wilcoxon)
 
     if len(intersect_genes) > 0:
-        # Create a text string with the list of genes
         genes_text = '\n'.join(sorted(intersect_genes))
         return dict(content=genes_text, filename="intersection_genes.txt")
     else:
-        # Return an empty file or a message indicating no genes found
         return dict(content="No genes found in intersection.", filename="intersection_genes.txt")
 
 def get_intersect_genes(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
                         fc_min_edger, fc_max_edger, padj_edger,
                         fc_min_limma, fc_max_limma, padj_limma,
                         fc_min_wilcoxon, fc_max_wilcoxon, padj_wilcoxon):
-    # Process DESeq2 data
     df1_copy = df1.copy()
     abs_log2fc = df1_copy['log2FoldChange'].abs()
     df1_copy['Label'] = np.where(
@@ -302,8 +272,6 @@ def get_intersect_genes(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         'Non'
     )
     degs_deseq2 = df1_copy[df1_copy['Label'] != 'Non']['gene'].unique()
-
-    # Process edgeR data
     df2_copy = df2.copy()
     abs_log2fc = df2_copy['log2FoldChange'].abs()
     df2_copy['Label'] = np.where(
@@ -312,8 +280,6 @@ def get_intersect_genes(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         'Non'
     )
     degs_edger = df2_copy[df2_copy['Label'] != 'Non']['gene'].unique()
-
-    # Process limma data
     df3_copy = df3.copy()
     abs_log2fc = df3_copy['log2FoldChange'].abs()
     df3_copy['Label'] = np.where(
@@ -322,8 +288,6 @@ def get_intersect_genes(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         'Non'
     )
     degs_limma = df3_copy[df3_copy['Label'] != 'Non']['gene'].unique()
-
-    # Process Wilcoxon data
     df4_copy = df4.copy()
     abs_log2fc = df4_copy['log2FoldChange'].abs()
     df4_copy['Label'] = np.where(
@@ -332,8 +296,6 @@ def get_intersect_genes(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
         'Non'
     )
     degs_wilcoxon = df4_copy[df4_copy['Label'] != 'Non']['gene'].unique()
-
-    # Compute intersection
     intersect_genes = set(degs_deseq2) & set(degs_edger) & set(degs_limma) & set(degs_wilcoxon)
     return intersect_genes
 
@@ -366,30 +328,20 @@ def perform_analysis(n_clicks,
 
     if len(intersect_genes) == 0:
         return html.Div("No genes found in intersection.")
-
-    # Convert gene list to a format suitable for the STRING API
     genes_list = list(intersect_genes)
-    species_id = 9606  # Change this to the appropriate NCBI taxon ID if necessary
-
-    # Call the STRING API to get the enrichment figure
+    species_id = 10090  
     string_api_url = "https://string-db.org/api"
     output_format = "image"
     method = "enrichmentfigure"
-
     request_url = "/".join([string_api_url, output_format, method])
-
     params = {
         "identifiers": "%0d".join(genes_list),
         "species": species_id,
         "caller_identity": "your_app_name",  # Replace with your app name or email
     }
-
     response = requests.post(request_url, data=params)
-
     if response.status_code != 200:
         return html.Div("Failed to retrieve enrichment figure from STRING API.")
-
-    # Encode the image to display in the browser
     enrichment_image = "data:image/png;base64,{}".format(
         base64.b64encode(response.content).decode()
     )
@@ -411,10 +363,9 @@ def keep_alive():
                 print(f"Keep-alive request failed with status {response.status_code}.")
         except Exception as e:
             print(f"Keep-alive request error: {e}")
-        time.sleep(300)  # Ping every 5 minutes
-
+        time.sleep(300)  
+        
 if __name__ == '__main__':
-    # Start the keep-alive thread
     threading.Thread(target=keep_alive, daemon=True).start()
-    port = int(os.environ.get("PORT", 10000))  # Render sets PORT to 10000 by default
+    port = int(os.environ.get("PORT", 10000)) 
     app.run_server(debug=False, host='0.0.0.0', port=port)
