@@ -244,6 +244,7 @@ def update_plot(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
     State('padj_threshold_wilcoxon', 'value'),
     prevent_initial_call=True
 )
+
 def download_intersection(n_clicks,
                           fc_min_deseq2, fc_max_deseq2, padj_deseq2,
                           fc_min_edger, fc_max_edger, padj_edger,
@@ -316,6 +317,7 @@ def get_intersect_genes(fc_min_deseq2, fc_max_deseq2, padj_deseq2,
     State('padj_threshold_wilcoxon', 'value'),
     prevent_initial_call=True
 )
+
 def perform_analysis(n_clicks,
                      fc_min_deseq2, fc_max_deseq2, padj_deseq2,
                      fc_min_edger, fc_max_edger, padj_edger,
